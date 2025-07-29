@@ -13,6 +13,8 @@ from src.fetch_jobs import fetch_jobs
 from src.transform_jobs import transform
 from src.filter_jobs import filter_jobs
 from src.enrich_glassdoor import enrich as enrich_gd
+from src.slack_notify import post_jobs
+
 
 
 def main() -> None:
@@ -26,8 +28,9 @@ def main() -> None:
     enriched = [enrich_layoffs(j) for j in filtered]
     enriched = [enrich_gd(j) for j in enriched]   # note: chain after layoffs
 
+    post_jobs(enriched)
 
-    print(f"Raw: {len(raw)} | After filter: {len(filtered)}", file=sys.stderr)
+    #print(f"Raw: {len(raw)} | After filter: {len(filtered)}", file=sys.stderr)
 
     if args.save:
         path = pathlib.Path(args.save)
@@ -40,4 +43,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
